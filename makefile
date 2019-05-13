@@ -48,6 +48,9 @@ $(BIND)/$(NAME): $(SRCS_OBJS) $(FINAL_OBJS)
 run:
 	@cd $(BIND) && $(CMD)
 
+img:
+	@cd $(BIND) && sxiv test.ff
+
 # tests executable
 $(BIND)/tests: $(SRCS_OBJS) $(TESTS_OBJS)
 	@echo "compiling tests"
