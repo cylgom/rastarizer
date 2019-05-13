@@ -2,8 +2,8 @@
 #include "math32.h"
 #include <stdint.h>
 
-// midpoint circle algorithm with anti-aliasing (Xiaolin Wu)
-// implemented with integer square root using point shifting
+// midpoint circle algorithm with very fast anti-aliasing
+// (thanks to integer math and Xiaolin Wu's amazing ideas)
 void ras_disk(
 	struct ras_buf ras,
 	uint16_t ox,
