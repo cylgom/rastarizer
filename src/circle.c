@@ -28,23 +28,20 @@ void ras_disk(
 	// loop offset by one to skip center pixel
 	for (x = 1; x < y; ++x)
 	{
-		// update alpha value
-		a = (isqrt((r2 - x * x) << 16) + 0x80) & 0xFF;
-
 		if (p < 0)
 		{
 			p += 2 * x + 1;
+
+			// update alpha value
+			a = (isqrt((r2 - x * x) << 16) + 0x80) & 0xFF;
 		}
 		else
 		{
-			// force opacity on the first pixel of the second slab
-			if (y == r)
-			{
-				a = 0xFF;
-			}
-
 			y--;
 			p += 2 * (x - y) + 1;
+
+			// fix opacity rounding
+			a = (isqrt((r2 - x * x - 1) << 16) + 0x80) & 0xFF;
 
 			// fill vertical and horizontal diameters (from top)
 			pixel_set(ras, ox, oy + y, 0x00, 0x00, 0x00, 0xFF);
@@ -89,5 +86,91 @@ void ras_disk(
 			pixel_set(ras, ox + i, oy - x, 0x00, 0x00, 0x00, 0xFF);
 			pixel_set(ras, ox - i, oy + x, 0x00, 0x00, 0x00, 0xFF);
 		}
+	}
+}
+
+void ras_rounded_rectangle(
+	struct ras_buf ras,
+	uint16_t x1,
+	uint16_t x2,
+	uint16_t y1,
+	uint16_t y2,
+	uint16_t r)
+{
+	int16_t x = 0;
+	int16_t y = r;
+	int16_t p = (5 - r * 4) / 4;
+
+	uint32_t r2 = r * r;
+	uint8_t a;
+	int16_t i;
+
+	for (x = 1; x < y; ++x)
+	{
+		if (p < 0)
+		{
+			p += 2 * x + 1;
+			a = (isqrt((r2 - x * x) << 16) + 0x80) & 0xFF;
+		}
+		else
+		{
+			y--;
+			p += 2 * (x - y) + 1;
+			a = (isqrt((r2 - x * x - 1) << 16) + 0x80) & 0xFF;
+		}
+
+		pixel_set(ras, x2 + x, y2 + x, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, x2 + x, y1 - x, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, x1 - x, y2 + x, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, x1 - x, y1 - x, 0x00, 0x00, 0x00, 0xFF);
+
+		pixel_set(ras, x2 + x, y2 + y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x1 - x, y2 + y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x2 + x, y1 - y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x1 - x, y1 - y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x2 + y, y2 + x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x1 - y, y2 + x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x2 + y, y1 - x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, x1 - y, y1 - x, 0x00, 0x00, 0x00, a);
+
+		for (i = x + 1; i < y; ++i)
+		{
+			pixel_set(ras, x2 + x, y2 + i, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x1 - x, y1 - i, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x2 + x, y1 - i, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x1 - x, y2 + i, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x2 + i, y2 + x, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x1 - i, y1 - x, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x2 + i, y1 - x, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, x1 - i, y2 + x, 0x00, 0x00, 0x00, 0xFF);
+		}
+	}
+
+	int16_t k;
+
+	for (k = y1; k < (y2 + 1); ++k)
+	{
+		for (i = (x1 - r + 1); i < (x2 + r); ++i)
+		{
+			pixel_set(ras, i, k, 0x00, 0x00, 0x00, 0xFF);
+		}
+
+		// this code performs an accurate extension of rounded
+		// corners by adding lines of semi-transparent pixels on the
+		// sides of the rectangle (which actually doesn't look good)
+		pixel_set(ras, x1 - r, k, 0x00, 0x00, 0x00, 0x80);
+		pixel_set(ras, x2 + r, k, 0x00, 0x00, 0x00, 0x80);
+	}
+
+	for (i = x1; i < (x2 + 1); ++i)
+	{
+		for (k = 0; k < r; ++k)
+		{
+			pixel_set(ras, i, y1 - k, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, i, y2 + k, 0x00, 0x00, 0x00, 0xFF);
+		}
+
+		pixel_set(ras, i, y1 - r, 0x00, 0x00, 0x00, 0x80);
+		pixel_set(ras, i, y2 + r, 0x00, 0x00, 0x00, 0x80);
 	}
 }

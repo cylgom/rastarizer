@@ -34,4 +34,12 @@ void ras_disk(
 	uint16_t oy,
 	uint16_t r);
 
+void ras_rounded_rectangle(
+	struct ras_buf ras,
+	uint16_t x1,
+	uint16_t x2,
+	uint16_t y1,
+	uint16_t y2,
+	uint16_t r);
+
 #endif
