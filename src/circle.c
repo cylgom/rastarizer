@@ -174,3 +174,117 @@ void ras_rounded_rectangle(
 		pixel_set(ras, i, y2 + r, 0x00, 0x00, 0x00, 0x80);
 	}
 }
+
+void ras_ring(
+	struct ras_buf ras,
+	uint16_t ox,
+	uint16_t oy,
+	uint16_t ro,
+	uint16_t ri)
+{
+	int16_t x = 0;
+
+	int16_t y = ro;
+	int16_t p = (5 - ro * 4) / 4;
+
+	int16_t yi = ri;
+	int16_t pi = (5 - ri * 4) / 4;
+
+	uint8_t a;
+	uint16_t i;
+
+	uint32_t r2 = ro * ro;
+	uint32_t ri2 = ri * ri;
+
+	pixel_set(ras, ox, oy + y, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox, oy - y, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox + y, oy, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox - y, oy, 0x00, 0x00, 0x00, 0x80);
+
+	pixel_set(ras, ox, oy + yi, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox, oy - yi, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox + yi, oy, 0x00, 0x00, 0x00, 0x80);
+	pixel_set(ras, ox - yi, oy, 0x00, 0x00, 0x00, 0x80);
+
+	for (x = 1; x < y; ++x)
+	{
+		if (p < 0)
+		{
+			p += 2 * x + 1;
+			a = (isqrt((r2 - x * x) << 16) + 0x80);
+		}
+		else
+		{
+			y--;
+			p += 2 * (x - y) + 1;
+			a = (isqrt((r2 - x * x - 1) << 16) + 0x80);
+		}
+
+		pixel_set(ras, ox + x, oy + y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x, oy + y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + x, oy - y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x, oy - y, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + y, oy + x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y, oy + x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + y, oy - x, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y, oy - x, 0x00, 0x00, 0x00, a);
+
+		if (x < yi)
+		{
+			if (pi < 0)
+			{
+				pi += 2 * x + 1;
+				a = 0xFF - ((isqrt((ri2 - x * x) << 16) + 0x80));
+			}
+			else
+			{
+				yi--;
+				pi += 2 * (x - yi) + 1;
+				a = 0xFF - ((isqrt((ri2 - x * x - 1) << 16) + 0x80));
+			}
+
+			pixel_set(ras, ox + x, oy + yi, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - x, oy + yi, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + x, oy - yi, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - x, oy - yi, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + yi, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - yi, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + yi, oy - x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - yi, oy - x, 0x00, 0x00, 0x00, a);
+
+			for (i = yi + 1; i < y; ++i)
+			{
+				pixel_set(ras, ox + x, oy + i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x, oy + i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + x, oy - i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x, oy - i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i, oy + x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i, oy + x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i, oy - x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i, oy - x, 0x00, 0x00, 0x00, 0xFF);
+			}
+		}
+		else
+		{
+			for (i = x; i < y; ++i)
+			{
+				pixel_set(ras, ox + x, oy + i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x, oy + i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + x, oy - i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x, oy - i, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i, oy + x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i, oy + x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i, oy - x, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i, oy - x, 0x00, 0x00, 0x00, 0xFF);
+			}
+		}
+	}
+
+	for (i = ri + 1; i < ro; ++i)
+	{
+		pixel_set(ras, ox + i, oy, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox - i, oy, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox, oy + i, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox, oy - i, 0x00, 0x00, 0x00, 0xFF);
+	}
+}

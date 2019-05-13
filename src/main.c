@@ -78,6 +78,7 @@ int main(void)
 		rgba[i] = 0xFF;
 	}
 
+#if 0
 	ras_disk(ras, 80, 80, 40);
 	ras_disk(ras, 10, 20, 10);
 	ras_disk(ras, 10, 40, 9);
@@ -91,6 +92,11 @@ int main(void)
 	ras_disk(ras, 10, 200, 1);
 
 	ras_rounded_rectangle(ras, 200, 300, 200, 350, 17);
+#endif
+
+	ras_ring(ras, 200, 200, 100, 90);
+	ras_ring(ras, 200, 200, 70, 69);
+	ras_ring(ras, 200, 200, 65, 55);
 
 	uint8_t ok = farbfeld("test.ff", 400, 400, rgba);
 
