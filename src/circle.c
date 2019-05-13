@@ -33,7 +33,7 @@ void ras_disk(
 			p += 2 * x + 1;
 
 			// update alpha value
-			a = (isqrt((r2 - x * x) << 16) + 0x80) & 0xFF;
+			a = isqrt((r2 - x * x) << 16) + 0x80;
 		}
 		else
 		{
@@ -41,7 +41,7 @@ void ras_disk(
 			p += 2 * (x - y) + 1;
 
 			// fix opacity rounding
-			a = (isqrt((r2 - x * x - 1) << 16) + 0x80) & 0xFF;
+			a = isqrt((r2 - x * x - 1) << 16) + 0x80;
 
 			// fill vertical and horizontal diameters (from top)
 			pixel_set(ras, ox, oy + y, 0x00, 0x00, 0x00, 0xFF);
@@ -110,13 +110,13 @@ void ras_rounded_rectangle(
 		if (p < 0)
 		{
 			p += 2 * x + 1;
-			a = (isqrt((r2 - x * x) << 16) + 0x80) & 0xFF;
+			a = isqrt((r2 - x * x) << 16) + 0x80;
 		}
 		else
 		{
 			y--;
 			p += 2 * (x - y) + 1;
-			a = (isqrt((r2 - x * x - 1) << 16) + 0x80) & 0xFF;
+			a = isqrt((r2 - x * x - 1) << 16) + 0x80;
 		}
 
 		pixel_set(ras, x2 + x, y2 + x, 0x00, 0x00, 0x00, 0xFF);
@@ -211,13 +211,13 @@ void ras_ring(
 		if (p < 0)
 		{
 			p += 2 * x + 1;
-			a = (isqrt((r2 - x * x) << 16) + 0x80);
+			a = isqrt((r2 - x * x) << 16) + 0x80;
 		}
 		else
 		{
 			y--;
 			p += 2 * (x - y) + 1;
-			a = (isqrt((r2 - x * x - 1) << 16) + 0x80);
+			a = isqrt((r2 - x * x - 1) << 16) + 0x80;
 		}
 
 		pixel_set(ras, ox + x, oy + y, 0x00, 0x00, 0x00, a);
@@ -234,13 +234,13 @@ void ras_ring(
 			if (pi < 0)
 			{
 				pi += 2 * x + 1;
-				a = 0xFF - ((isqrt((ri2 - x * x) << 16) + 0x80));
+				a = 0xFF - (isqrt((ri2 - x * x) << 16) + 0x80);
 			}
 			else
 			{
 				yi--;
 				pi += 2 * (x - yi) + 1;
-				a = 0xFF - ((isqrt((ri2 - x * x - 1) << 16) + 0x80));
+				a = 0xFF - (isqrt((ri2 - x * x - 1) << 16) + 0x80);
 			}
 
 			pixel_set(ras, ox + x, oy + yi, 0x00, 0x00, 0x00, a);
