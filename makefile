@@ -22,6 +22,7 @@ TESTS+= $(SUBD)/testoasterror/src/testoasterror.c
 
 SRCS = $(SRCD)/rastarizer.c
 SRCS+= $(SRCD)/circle.c
+SRCS+= $(SRCD)/bezier.c
 SRCS+= $(SUBD)/math32/src/math32.c
 
 FINAL_OBJS:= $(patsubst %.c,$(OBJD)/%.o,$(FINAL))
