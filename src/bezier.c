@@ -5,14 +5,14 @@
 #include <stdbool.h>
 
 static inline uint16_t bernstein_cubic(
-	uint16_t a,
-	uint16_t b,
-	uint16_t c,
-	uint16_t d,
-	uint32_t t,
-	uint32_t base)
+	int16_t a,
+	int16_t b,
+	int16_t c,
+	int16_t d,
+	int32_t t,
+	int32_t base)
 {
-	uint16_t t_1 = base - t;
+	int32_t t_1 = base - t;
 
 	return (a * (t_1 * t_1 * t_1)
 		+ b * 3 * (t_1 * t_1) * t
@@ -21,32 +21,64 @@ static inline uint16_t bernstein_cubic(
 }
 
 static inline void add_time(
-	uint32_t* t,
+	int32_t* t,
 	uint8_t* t_count,
-	uint32_t k,
-	uint32_t v)
+	int32_t k,
+	int32_t v)
 {
 	if (v <= k)
 	{
 		t[*t_count] = v;
 		++(*t_count);
 	}
+
+	int32_t tmp;
+
+	if ((*t_count == 3) && (t[1] > t[2]))
+	{
+		tmp = t[2];
+		t[2] = t[1];
+		t[1] = tmp;
+	}
+	else if (*t_count == 4)
+	{
+		if (t[1] > t[3])
+		{
+			tmp = t[3];
+			t[3] = t[1];
+			t[1] = tmp;
+		}
+
+		if (t[2] > t[3])
+		{
+			tmp = t[3];
+			t[3] = t[2];
+			t[2] = tmp;
+		}
+
+		if (t[1] > t[2])
+		{
+			tmp = t[2];
+			t[2] = t[1];
+			t[1] = tmp;
+		}
+	}
 }
 
 static inline bool inflexions(
-	uint16_t a,
-	uint16_t b,
-	uint16_t c,
-	uint16_t d,
-	uint32_t k,
-	uint32_t* t,
+	int16_t a,
+	int16_t b,
+	int16_t c,
+	int16_t d,
+	int32_t k,
+	int32_t* t,
 	uint8_t* t_count)
 {
-	uint16_t root_den = a - 3*b + 3*c - d;
+	int16_t root_den = a - 3*b + 3*c - d;
 
 	if (root_den == 0)
 	{
-		uint16_t root2_den = 2*(a - 2*b +c);
+		int16_t root2_den = 2*(a - 2*b +c);
 
 		// plot line
 		if (root2_den == 0)
@@ -62,8 +94,8 @@ static inline bool inflexions(
 	}
 	else
 	{
-		uint32_t root_nu1 = k * (a - 2*b + c);
-		uint32_t root_nu2 = isqrt(k*k*(a*(d-c) + b*b - b*(c+d) + c*c));
+		int32_t root_nu1 = k * (a - 2*b + c);
+		int32_t root_nu2 = isqrt(k*k*(a*(d-c) + b*b - b*(c+d) + c*c));
 
 		// one root
 		if (root_nu2 == 0)
@@ -83,34 +115,32 @@ static inline bool inflexions(
 
 static void ras_bezier_cubic_bijective(
 	struct ras_buf ras,
-	uint16_t ax,
-	uint16_t ay,
-	uint16_t bx,
-	uint16_t by,
-	uint16_t cx,
-	uint16_t cy,
-	uint16_t dx,
-	uint16_t dy)
+	int16_t ax,
+	int16_t ay,
+	int16_t bx,
+	int16_t by,
+	int16_t cx,
+	int16_t cy,
+	int16_t dx,
+	int16_t dy)
 {
 }
 
 void ras_bezier_cubic(
 	struct ras_buf ras,
-	uint16_t ax,
-	uint16_t ay,
-	uint16_t bx,
-	uint16_t by,
-	uint16_t cx,
-	uint16_t cy,
-	uint16_t dx,
-	uint16_t dy)
+	int16_t ax,
+	int16_t ay,
+	int16_t bx,
+	int16_t by,
+	int16_t cx,
+	int16_t cy,
+	int16_t dx,
+	int16_t dy)
 {
-	uint32_t k = 256;
+	int32_t k = 181;
 
-	uint32_t t[4];
+	int32_t t[4] = {0};
 	uint8_t t_count = 1;
-
-	t[0] = 0;
 
 	// compute inflexion times
 	if (!(inflexions(ax, bx, cx, dx, k, t, &t_count)
@@ -119,52 +149,50 @@ void ras_bezier_cubic(
 		return;
 	}
 
-#if 0
-	uint16_t mx;
-	uint16_t my;
-	uint16_t sx;
-	uint16_t sy;
+	int16_t mx;
+	int16_t my;
+	int16_t sx;
+	int16_t sy;
 
-	uint16_t b2x;
-	uint16_t b2y;
-	uint16_t c2x;
-	uint16_t c2y;
+	int16_t b2x;
+	int16_t b2y;
+	int16_t c2x;
+	int16_t c2y;
 
-	uint16_t b1x;
-	uint16_t b1y;
-	uint16_t c1x;
-	uint16_t c1y;
+	int16_t b1x;
+	int16_t b1y;
+	int16_t c1x;
+	int16_t c1y;
 
-	uint32_t t_new;
-	uint32_t k_new;
-#endif
+	int32_t t_new;
+	int32_t k_new;
 	
 	for (uint8_t i = 1; i < t_count; ++i)
 	{
-		printf("%d %d\n",
-			bernstein_cubic(ax, bx, cx, dx, t[i], k),
-			bernstein_cubic(ay, by, cy, dy, t[i], k));
-
-#if 0
 		// compensate splitting
 		t_new = t[i] - t[i-1];
 		k_new = k - t[i-1];
 
+		// debug
+		printf("%d %d\n",
+			bernstein_cubic(ax, bx, cx, dx, t_new, k_new),
+			bernstein_cubic(ay, by, cy, dy, t_new, k_new));
+
 		// split the curve
-		b1x = (t_new * (bx - ax) + ax) / k_new;
-		b1y = (t_new * (by - ay) + ay) / k_new;
-		c1x = (t_new * (dx - cx) + cx) / k_new;
-		c1y = (t_new * (dy - cy) + cy) / k_new;
-		sx = (t_new * (cx - bx) + bx) / k_new;
-		sy = (t_new * (cy - by) + by) / k_new;
+		b1x = t_new * (bx - ax) / k_new + ax;
+		b1y = t_new * (by - ay) / k_new + ay;
+		c1x = t_new * (dx - cx) / k_new + cx;
+		c1y = t_new * (dy - cy) / k_new + cy;
+		sx = t_new * (cx - bx) / k_new + bx;
+		sy = t_new * (cy - by) / k_new + by;
 
-		c2x = (t_new * (sx - b1x) + b1x) / k_new;
-		c2y = (t_new * (sy - b1y) + b1y) / k_new;
-		b2x = (t_new * (c1x - sx) + sx) / k_new;
-		b2y = (t_new * (c1y - sy) + sy) / k_new;
+		c2x = t_new * (sx - b1x) / k_new + b1x;
+		c2y = t_new * (sy - b1y) / k_new + b1y;
+		b2x = t_new * (c1x - sx) / k_new + sx;
+		b2y = t_new * (c1y - sy) / k_new + sy;
 
-		mx = (t_new * (b2x - c2x) + c2x) / k_new;
-		my = (t_new * (b2y - c2y) + c2y) / k_new;
+		mx = t_new * (b2x - c2x) / k_new + c2x;
+		my = t_new * (b2y - c2y) / k_new + c2y;
 
 		// plot bijective bezier section
 		ras_bezier_cubic_bijective(ras, ax, ay, b1x, b1y, c2x, c2y, mx, my);
@@ -176,7 +204,6 @@ void ras_bezier_cubic(
 		by = b2y;
 		cx = c1x;
 		cy = c1y;
-#endif
 	}
 
 	// plot the remaining section
