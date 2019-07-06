@@ -49,24 +49,15 @@ void ras_rounded_rectangle(
 	uint16_t y2,
 	uint16_t r);
 
-void ras_quad(
+void ras_bezier_cubic(
 	struct ras_buf ras,
-	int16_t ax,
-	int16_t ay,
-	int16_t bx,
-	int16_t by,
-	int16_t mx,
-	int16_t my);
-
-void ras_cubic(
-	struct ras_buf ras,
-	int16_t ax,
-	int16_t ay,
-	int16_t bx,
-	int16_t by,
-	int16_t cx,
-	int16_t cy,
-	int16_t dx,
-	int16_t dy);
+	uint16_t ax,
+	uint16_t ay,
+	uint16_t bx,
+	uint16_t by,
+	uint16_t cx,
+	uint16_t cy,
+	uint16_t dx,
+	uint16_t dy);
 
 #endif
