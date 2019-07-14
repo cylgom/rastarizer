@@ -60,4 +60,11 @@ void ras_bezier_cubic(
 	int16_t dx,
 	int16_t dy);
 
+void ras_line(
+	struct ras_buf ras,
+	int32_t x1,
+	int32_t y1,
+	int32_t x2,
+	int32_t y2);
+
 #endif

@@ -97,17 +97,10 @@ int main(void)
 	ras_ring(ras, 200, 200, 100, 90);
 	ras_ring(ras, 200, 200, 70, 69);
 	ras_ring(ras, 200, 200, 65, 55);
-
-	ras_bezier_cubic(
-		ras,
-		104,
-		236,
-		31,
-		100,
-		150,
-		87,
-		105,
-		183);
+	ras_line(ras, 100, 100, 200, 75);
+	ras_line(ras, 100, 100, 125, 0);
+	ras_line(ras, 1, 1, 10, 1);
+	ras_line(ras, 1, 3, 1, 13);
 
 	uint8_t ok = farbfeld("test.ff", 400, 400, rgba);
 
