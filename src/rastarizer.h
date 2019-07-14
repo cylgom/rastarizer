@@ -10,6 +10,9 @@ struct ras_buf
 	uint16_t height;
 };
 
+uint32_t gamma_22(uint32_t x);
+uint32_t r_gamma_22(uint32_t x);
+
 void pixel_blend(
 	struct ras_buf ras,
 	uint16_t x,

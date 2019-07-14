@@ -42,7 +42,8 @@ static inline int32_t round32(int32_t n)
 	}
 }
 
-// doesn't fix the fixed-point multiplication rounding error
+// taken from rosetta code and modified to use fixed-point arithmetic
+// doesn't compensate the fixed-point multiplication rounding error
 void ras_precision_line(
 	struct ras_buf ras,
 	int32_t x1,
