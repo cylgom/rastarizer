@@ -101,6 +101,7 @@ int main(void)
 	ras_line(ras, 100, 100, 125, 0);
 	ras_line(ras, 1, 1, 10, 1);
 	ras_line(ras, 1, 3, 1, 13);
+	ras_bezier_cubic(ras, 300, 400, 310, 300, 390, 280, 380, 400);
 
 	uint8_t ok = farbfeld("test.ff", 400, 400, rgba);
 

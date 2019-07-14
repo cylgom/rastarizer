@@ -51,16 +51,23 @@ void ras_rounded_rectangle(
 
 void ras_bezier_cubic(
 	struct ras_buf ras,
-	int16_t ax,
-	int16_t ay,
-	int16_t bx,
-	int16_t by,
-	int16_t cx,
-	int16_t cy,
-	int16_t dx,
-	int16_t dy);
+	int32_t p0x,
+	int32_t p0y,
+	int32_t p1x,
+	int32_t p1y,
+	int32_t p2x,
+	int32_t p2y,
+	int32_t p3x,
+	int32_t p3y);
 
 void ras_line(
+	struct ras_buf ras,
+	int32_t x1,
+	int32_t y1,
+	int32_t x2,
+	int32_t y2);
+
+void ras_precision_line(
 	struct ras_buf ras,
 	int32_t x1,
 	int32_t y1,

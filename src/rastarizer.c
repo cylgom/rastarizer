@@ -28,5 +28,5 @@ void pixel_set(
 	++p;
 	*p = b;
 	++p;
-	*p = a;
+	*p += a + 1;
 }
