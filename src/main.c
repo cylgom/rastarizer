@@ -79,7 +79,7 @@ int main(void)
 	}
 
 	// test all circles radi up to 10 pixels
-#if 0
+#if 1
 	ras_disk(ras, 80, 80, 40);
 	ras_disk(ras, 10, 20, 10);
 	ras_disk(ras, 10, 40, 9);
@@ -111,7 +111,7 @@ int main(void)
 	ras_bezier_cubic(ras, 350, 399, 390, 300, 310, 280, 360, 399);
 
 	// plot gamma functions to check everything is right
-#if 0
+#if 1
 	for (uint32_t i = 0; i < 256; ++i)
 	{
 		pixel_set(ras, i, 399 - gamma_22(i), 0x00, 0x00, 0x00, 0xFF);
