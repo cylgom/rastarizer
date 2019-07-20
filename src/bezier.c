@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// arbitrary number of steps
+#define STEPS 50
+#define STEPS2 (STEPS * STEPS)
+#define STEPS3 (STEPS * STEPS * STEPS)
+
 // taken from Dr.Dobb's journal and modified to use fixed-point arithmetic
-// we use several step precalcs to reduce splitting to the minimum needed
-// the second order derivative is used as an indicator because we want to
-// look at the slope evolution to predict the next step size, no the
-// instant curvature
 void ras_precision_bezier_cubic(
 	struct ras_buf ras,
 	int32_t p0x,
@@ -42,20 +43,16 @@ void ras_precision_bezier_cubic(
 	int32_t xpxl_old = pointX;
 	int32_t ypxl_old = pointY;
 
-    int32_t steps = 50;
-	int32_t steps2 = steps * steps;
-	int32_t steps3 = steps2 * steps;
+    int32_t firstFDX = (ax / STEPS3) + (bx / STEPS2) + (cx / STEPS);
+    int32_t firstFDY = (ay / STEPS3) + (by / STEPS2) + (cy / STEPS);
 
-    int32_t firstFDX = (ax / steps3) + (bx / steps2) + (cx / steps);
-    int32_t firstFDY = (ay / steps3) + (by / steps2) + (cy / steps);
+    int32_t secondFDX = ((6 * ax) / STEPS3) + ((2 * bx) / STEPS2);
+    int32_t secondFDY = ((6 * ay) / STEPS3) + ((2 * by) / STEPS2);
 
-    int32_t secondFDX = ((6 * ax) / steps3) + ((2 * bx) / steps2);
-    int32_t secondFDY = ((6 * ay) / steps3) + ((2 * by) / steps2);
+    int32_t thirdFDX = (6 * ax) / STEPS3;
+    int32_t thirdFDY = (6 * ay) / STEPS3;    
 
-    int32_t thirdFDX = (6 * ax) / steps3;
-    int32_t thirdFDY = (6 * ay) / steps3;    
-
-    for (int32_t i = 0; i < steps; ++i)
+    for (int32_t i = 0; i < STEPS; ++i)
 	{
         pointX += firstFDX;
         pointY += firstFDY;

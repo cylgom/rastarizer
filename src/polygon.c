@@ -32,6 +32,7 @@ void ras_precision_line(
 		// start
 		int32_t gradient;
 		
+		// set the gradient to maximum if we divide by zero
 		if (dx == 0)
 		{
 			gradient = 0x7FFFFFFF;
@@ -88,6 +89,7 @@ void ras_precision_line(
 		// start
 		int32_t gradient;
 		
+		// set the gradient to maximum if we divide by zero
 		if ((dy >> 16) == 0)
 		{
 			gradient = 0x7FFFFFFF;
