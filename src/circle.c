@@ -70,10 +70,14 @@ void ras_disk(
 		pixel_set(ras, ox - x, oy + y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, ox + x, oy - y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, ox - x, oy - y, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox + y, oy + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox - y, oy + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox + y, oy - x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox - y, oy - x, 0x00, 0x00, 0x00, a);
+
+		if (x != y)
+		{
+			pixel_set(ras, ox + y, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - y, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + y, oy - x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - y, oy - x, 0x00, 0x00, 0x00, a);
+		}
 
 		// fill circle
 		for (i = x + 1; i < y; ++i)
@@ -132,10 +136,14 @@ void ras_rounded_rectangle(
 		pixel_set(ras, x1 - x, y2 + y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, x2 + x, y1 - y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, x1 - x, y1 - y, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, x2 + y, y2 + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, x1 - y, y2 + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, x2 + y, y1 - x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, x1 - y, y1 - x, 0x00, 0x00, 0x00, a);
+
+		if (x != y)
+		{
+			pixel_set(ras, x2 + y, y2 + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, x1 - y, y2 + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, x2 + y, y1 - x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, x1 - y, y1 - x, 0x00, 0x00, 0x00, a);
+		}
 
 		for (i = x + 1; i < y; ++i)
 		{
@@ -228,10 +236,14 @@ void ras_ring(
 		pixel_set(ras, ox - x, oy + y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, ox + x, oy - y, 0x00, 0x00, 0x00, a);
 		pixel_set(ras, ox - x, oy - y, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox + y, oy + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox - y, oy + x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox + y, oy - x, 0x00, 0x00, 0x00, a);
-		pixel_set(ras, ox - y, oy - x, 0x00, 0x00, 0x00, a);
+
+		if (x != y)
+		{
+			pixel_set(ras, ox + y, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - y, oy + x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + y, oy - x, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - y, oy - x, 0x00, 0x00, 0x00, a);
+		}
 
 		if (x < yi)
 		{
@@ -251,10 +263,14 @@ void ras_ring(
 			pixel_set(ras, ox - x, oy + yi, 0x00, 0x00, 0x00, a);
 			pixel_set(ras, ox + x, oy - yi, 0x00, 0x00, 0x00, a);
 			pixel_set(ras, ox - x, oy - yi, 0x00, 0x00, 0x00, a);
-			pixel_set(ras, ox + yi, oy + x, 0x00, 0x00, 0x00, a);
-			pixel_set(ras, ox - yi, oy + x, 0x00, 0x00, 0x00, a);
-			pixel_set(ras, ox + yi, oy - x, 0x00, 0x00, 0x00, a);
-			pixel_set(ras, ox - yi, oy - x, 0x00, 0x00, 0x00, a);
+
+			if (x != yi)
+			{
+				pixel_set(ras, ox + yi, oy + x, 0x00, 0x00, 0x00, a);
+				pixel_set(ras, ox - yi, oy + x, 0x00, 0x00, 0x00, a);
+				pixel_set(ras, ox + yi, oy - x, 0x00, 0x00, 0x00, a);
+				pixel_set(ras, ox - yi, oy - x, 0x00, 0x00, 0x00, a);
+			}
 
 			for (i = yi + 1; i < y; ++i)
 			{
