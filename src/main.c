@@ -79,7 +79,7 @@ int main(void)
 	}
 
 	// test all circles radi up to 10 pixels
-#if 0
+#if 1
 	ras_disk(ras, 80, 80, 40);
 	ras_disk(ras, 10, 20, 10);
 	ras_disk(ras, 10, 40, 9);
@@ -95,14 +95,14 @@ int main(void)
 #endif
 
 	// test rings
-#if 0
+#if 1
 	ras_ring(ras, 200, 200, 100, 90);
 	ras_ring(ras, 200, 200, 70, 69);
 	ras_ring(ras, 200, 200, 65, 55);
 #endif
 	
 	// lines
-#if 0
+#if 1
 	ras_line(ras, 100, 100, 200, 75);
 	ras_line(ras, 100, 100, 125, 0);
 	ras_line(ras, 1, 1, 10, 1);
@@ -119,7 +119,7 @@ int main(void)
 #endif
 
 	// cubic bezier
-#if 0
+#if 1
 	ras_bezier_cubic(ras, 300, 399, 310, 300, 390, 280, 380, 399);
 	ras_bezier_cubic(ras, 300, 399, 390, 300, 310, 280, 380, 399);
 	ras_bezier_cubic(ras, 350, 399, 390, 300, 310, 280, 360, 399);
