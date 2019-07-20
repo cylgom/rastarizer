@@ -4,31 +4,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-static inline int32_t perimeter(
-	int32_t p0x,
-	int32_t p0y,
-	int32_t p1x,
-	int32_t p1y,
-	int32_t p2x,
-	int32_t p2y,
-	int32_t p3x,
-	int32_t p3y)
-{
-	int32_t x = p1x - p0x;
-	int32_t y = p1y - p0y;
-	int32_t ret = isqrt(x*x + y*y);
-
-	x = p2x - p1x;
-	y = p2y - p1y;
-	ret += isqrt(x*x + y*y);
-
-	x = p3x - p2x;
-	y = p3y - p2y;
-	ret += isqrt(x*x + y*y);
-
-	return ret;
-}
-
 // taken from Dr.Dobb's journal and modified to use fixed-point arithmetic
 // we use several step precalcs to reduce splitting to the minimum needed
 // the second order derivative is used as an indicator because we want to
@@ -67,7 +42,7 @@ void ras_precision_bezier_cubic(
 	int32_t xpxl_old = pointX;
 	int32_t ypxl_old = pointY;
 
-    int32_t steps = perimeter(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y) / 4000;
+    int32_t steps = 50;
 	int32_t steps2 = steps * steps;
 	int32_t steps3 = steps2 * steps;
 
@@ -111,12 +86,12 @@ void ras_bezier_cubic(
 {
 	ras_precision_bezier_cubic(
 		ras,
-		p0x << 8,
-		p0y << 8,
-		p1x << 8,
-		p1y << 8,
-		p2x << 8,
-		p2y << 8,
-		p3x << 8,
-		p3y << 8);
+		p0x << 16,
+		p0y << 16,
+		p1x << 16,
+		p1y << 16,
+		p2x << 16,
+		p2y << 16,
+		p3x << 16,
+		p3y << 16);
 }

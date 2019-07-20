@@ -79,7 +79,7 @@ int main(void)
 	}
 
 	// test all circles radi up to 10 pixels
-#if 1
+#if 0
 	ras_disk(ras, 80, 80, 40);
 	ras_disk(ras, 10, 20, 10);
 	ras_disk(ras, 10, 40, 9);
@@ -94,30 +94,37 @@ int main(void)
 	ras_rounded_rectangle(ras, 200, 300, 200, 350, 17);
 #endif
 
+#if 0
 	// test rings
 	ras_ring(ras, 200, 200, 100, 90);
 	ras_ring(ras, 200, 200, 70, 69);
 	ras_ring(ras, 200, 200, 65, 55);
+#endif
 	
+#if 0
 	// lines
 	ras_line(ras, 100, 100, 200, 75);
 	ras_line(ras, 100, 100, 125, 0);
 	ras_line(ras, 1, 1, 10, 1);
 	ras_line(ras, 1, 3, 1, 13);
-
-	// cubic bezier
-	ras_bezier_cubic(ras, 300, 399, 310, 300, 390, 280, 380, 399);
-	ras_bezier_cubic(ras, 300, 399, 390, 300, 310, 280, 380, 399);
-	ras_bezier_cubic(ras, 350, 399, 390, 300, 310, 280, 360, 399);
+#endif
 
 	// plot gamma functions to check everything is right
-#if 1
+#if 0
 	for (uint32_t i = 0; i < 256; ++i)
 	{
 		pixel_set(ras, i, 399 - gamma_22(i), 0x00, 0x00, 0x00, 0xFF);
 		pixel_set(ras, i, 399 - r_gamma_22(i), 0x00, 0x00, 0x00, 0xFF);
 	}
 #endif
+
+	// cubic bezier
+	ras_bezier_cubic(ras, 300, 399, 310, 300, 390, 280, 380, 399);
+	ras_bezier_cubic(ras, 300, 399, 390, 300, 310, 280, 380, 399);
+	ras_bezier_cubic(ras, 350, 399, 390, 300, 310, 280, 360, 399);
+
+	ras_bezier_cubic(ras, 10, 399, 20, 10, 379, 10, 389, 399);
+	ras_bezier_cubic(ras, 10, 399, 389, 10, 10, 10, 389, 399);
 
 	uint8_t ok = farbfeld("test.ff", 400, 400, rgba);
 

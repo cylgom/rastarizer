@@ -29,6 +29,12 @@ void pixel_set(
 	uint8_t a)
 {
 	uint8_t* p = ras.buf + (y * ras.width + x) * 4;
+
+	if (p > (ras.buf + ras.width * ras.height * 4))
+	{
+		return;
+	}
+
 	uint8_t a_dst = p[3];
 	uint8_t a_out = (((uint32_t) a_dst) * (0xFF - a) / 0xFF) + a;
 
