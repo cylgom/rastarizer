@@ -5,17 +5,17 @@
 // i.e. not exactly sRGB compliant (but close)
 inline uint32_t gamma_22(uint32_t x)
 {
-	uint32_t t = (x << 8) / 255;
-	uint32_t t3 = (t*t*t) >> 8; // compensate left-shifting of division
+	uint32_t t = (x << 16) / 0xFF;
+	uint32_t t3 = (((t * t) >> 16) * t) >> 8; // compensate left-shifting of division
 
-	return t3 / (0x23 + ((0xDC*t) >> 8));
+	return t3 / (0x2300 + ((0xDC * t) >> 8));
 }
 
 inline uint32_t r_gamma_22(uint32_t x)
 {
-	uint32_t t = (x << 8) / 255; // compensate right-shifting of isqrt
+	uint32_t t = (x << 16) / 0xFF; // compensate right-shifting of isqrt
 
-	return (isqrt(t << 8) << 8) / (0xEB + ((0x14*t) >> 8));
+	return (isqrt(t << 14) << 9) / (0xEB00 + ((0x14*t) >> 8));
 }
 
 // gamma-aware pixel blending
