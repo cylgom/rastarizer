@@ -141,3 +141,33 @@ void ras_line(
 {
 	ras_precision_line(ras, x1 << 16, y1 << 16, x2 << 16, y2 << 16);
 }
+
+// polygon filler
+void ras_precision_polygon(struct ras_buf ras, uint32_t* points, uint32_t count)
+{
+	--count;
+
+	uint32_t i;
+
+	for (i = 0; i < count; ++i)
+	{
+		ras_precision_line(ras, points[i*2], points[i*2 + 1], points[i*2 + 2], points[i*2 + 3]);
+	}
+
+	ras_precision_line(ras, points[i*2], points[i*2 + 1], points[0], points[1]);
+}
+
+// pixel-perfect version
+void ras_polygon(struct ras_buf ras, uint32_t* points, uint32_t count)
+{
+	--count;
+
+	uint32_t i;
+
+	for (i = 0; i < count; ++i)
+	{
+		ras_line(ras, points[i*2], points[i*2 + 1], points[i*2 + 2], points[i*2 + 3]);
+	}
+
+	ras_line(ras, points[i*2], points[i*2 + 1], points[0], points[1]);
+}

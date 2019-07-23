@@ -77,4 +77,14 @@ void ras_precision_line(
 	int32_t x2,
 	int32_t y2);
 
+void ras_polygon(
+	struct ras_buf ras,
+	uint32_t* points,
+	uint32_t count);
+
+void ras_precision_polygon(
+	struct ras_buf ras,
+	uint32_t* points,
+	uint32_t count);
+
 #endif
