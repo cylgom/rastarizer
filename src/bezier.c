@@ -21,6 +21,10 @@ void ras_precision_bezier_cubic(
 	int32_t p3x,
 	int32_t p3y)
 {
+	int32_t diff;
+	int32_t angle;
+	int32_t angle_old = 0;
+
 	// factorize and force operations order to gain precision
 	// do not move the operands or develop the products
     int32_t ax = (3 * (p1x - p2x) + p3x) - p0x;
@@ -63,10 +67,17 @@ void ras_precision_bezier_cubic(
         secondFDX += thirdFDX;
         secondFDY += thirdFDY;
 
-		ras_precision_line(ras, xpxl_old, ypxl_old, pointX, pointY);
+		angle = iatan2(xpxl_old - pointX, ypxl_old - pointY);
+		diff = angle - angle_old;
+		diff = (diff < 0) ? -diff : diff;
 
-		xpxl_old = pointX;
-		ypxl_old = pointY;
+		if ((diff > 2) || (i == 0) || (i == (STEPS - 1)))
+		{
+			ras_precision_line(ras, xpxl_old, ypxl_old, pointX, pointY);
+			angle_old = angle;
+			xpxl_old = pointX;
+			ypxl_old = pointY;
+		}
     }
 }
 
