@@ -71,7 +71,7 @@ void ras_precision_bezier_cubic(
 		diff = angle - angle_old;
 		diff = (diff < 0) ? -diff : diff;
 
-		if ((diff > 2) || (i == 0) || (i == (STEPS - 1)))
+		if ((diff > 1) || (i == 0) || (i == (STEPS - 1)))
 		{
 			ras_precision_line(ras, xpxl_old, ypxl_old, pointX, pointY);
 			angle_old = angle;
