@@ -1,3 +1,3 @@
 [submodule "sub/math32"]
 	path = sub/math32
-	url = https://github.com/cylgom/math32.git
+	url = https://github.com/nullgemm/math32.git

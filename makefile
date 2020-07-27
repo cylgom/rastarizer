@@ -86,7 +86,7 @@ github:
 	@git submodule update --init --remote
 
 gitea:
-	@echo "sourcing submodules from https://git.cylgom.net"
+	@echo "sourcing submodules from personal server"
 	@cp .gitea .gitmodules
 	@git submodule sync
 	@git submodule update --init --remote
