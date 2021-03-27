@@ -94,6 +94,85 @@ void ras_disk(
 	}
 }
 
+void ras_disk2(
+	struct ras_buf ras,
+	uint32_t ox,
+	uint32_t oy,
+	uint32_t r)
+{
+	r += 1;
+
+	int32_t i;
+	int32_t a;
+	int32_t x = 1;
+	int32_t y = r - 1;
+	int32_t r2 = r * r;
+
+	while (x < y)
+	{
+		a = (0xFF * r) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+		if (a < 0)
+		{
+			a = -a;
+		}
+
+		// set antialiased NNE, NNW, SSE, SSW octants
+		pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
+
+		// set antialiased ENE, ESE, WNW, WSW octants
+		pixel_set(ras, ox + y - 1, oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + y - 1, oy - x    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy - x    , 0x00, 0x00, 0x00, a);
+
+		// fill diagonals
+		pixel_set(ras, ox + x - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox + x - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox - x    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+		pixel_set(ras, ox - x    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+
+		// fill the reset of the circle
+		for (i = x + 1; i < y; ++i)
+		{
+			pixel_set(ras, ox + x - 1, oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - x    , oy - i    , 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox + x - 1, oy - i    , 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - x    , oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox + i - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - i    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox + i - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - i    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+		}
+
+		if (((x + 1) * (x + 1) + (y * y)) > r2)
+		{
+			--y;
+			++x;
+		}
+		else
+		{
+			++x;
+		}
+	}
+
+	// set antialiased diagonals pixels
+	a = (0xFF * r) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+	if (a < 0)
+	{
+		a = -a;
+	}
+
+	pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
+}
+
 void ras_rounded_rectangle(
 	struct ras_buf ras,
 	uint16_t x1,
@@ -307,4 +386,269 @@ void ras_ring(
 		pixel_set(ras, ox, oy + i, 0x00, 0x00, 0x00, 0xFF);
 		pixel_set(ras, ox, oy - i, 0x00, 0x00, 0x00, 0xFF);
 	}
+}
+
+void ras_ring2(
+	struct ras_buf ras,
+	uint32_t ox,
+	uint32_t oy,
+	uint32_t ro,
+	uint32_t ri)
+{
+	ro += 1;
+	ri += 1;
+
+	int32_t i;
+	int32_t a;
+
+	int32_t x = 1;
+	int32_t y = ro - 1;
+
+	int32_t xi = 1;
+	int32_t yi = ri - 1;
+
+	int32_t ro2 = ro * ro;
+	int32_t ri2 = ri * ri;
+
+	while (x < y)
+	{
+		a = (0xFF * ro) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+		if (a < 0)
+		{
+			a = -a;
+		}
+
+		// set antialiased NNE, NNW, SSE, SSW octants
+		pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
+
+		// set antialiased ENE, ESE, WNW, WSW octants
+		pixel_set(ras, ox + y - 1, oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + y - 1, oy - x    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy - x    , 0x00, 0x00, 0x00, a);
+
+		if (xi < yi)
+		{
+			a = 0xFF - (0xFF * ri) + ((0xFF * isqrt(((yi * yi) + (xi * xi)) << 16)) >> 8);
+
+			if (a < 0)
+			{
+				a = -a;
+			}
+
+			// set antialiased NNE, NNW, SSE, SSW octants
+			pixel_set(ras, ox + xi - 1, oy + yi - 1, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - xi    , oy + yi - 1, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + xi - 1, oy - yi    , 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - xi    , oy - yi    , 0x00, 0x00, 0x00, a);
+
+			// set antialiased ENE, ESE, WNW, WSW octants
+			pixel_set(ras, ox + yi - 1, oy + xi - 1, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - yi    , oy + xi - 1, 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox + yi - 1, oy - xi    , 0x00, 0x00, 0x00, a);
+			pixel_set(ras, ox - yi    , oy - xi    , 0x00, 0x00, 0x00, a);
+
+			// fill the rest of the circle
+			for (i = yi + 1; i < y; ++i)
+			{
+				pixel_set(ras, ox + xi - 1, oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - xi    , oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + xi - 1, oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - xi    , oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy + xi - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy - xi    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy - xi    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy + xi - 1, 0x00, 0x00, 0x00, 0xFF);
+			}
+
+			if (((xi + 1) * (xi + 1) + (yi * yi)) > ri2)
+			{
+				--yi;
+				++xi;
+			}
+			else
+			{
+				++xi;
+			}
+		}
+		else
+		{
+			// fill diagonals
+			if (x > yi)
+			{
+				pixel_set(ras, ox + x - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + x - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+			}
+
+			// fill the rest of the circle
+			for (i = x + 1; i < y; ++i)
+			{
+				pixel_set(ras, ox + x - 1, oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + x - 1, oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+			}
+		}
+
+		if (((x + 1) * (x + 1) + (y * y)) > ro2)
+		{
+			--y;
+			++x;
+		}
+		else
+		{
+			++x;
+		}
+	}
+
+	// set antialiased diagonals pixels
+	a = (0xFF * ro) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+	if (a < 0)
+	{
+		a = -a;
+	}
+
+	pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
+
+	// set antialiased diagonals pixels
+	a = 0xFF - (0xFF * ri) + ((0xFF * isqrt(((yi * yi) + (xi * xi)) << 16)) >> 8);
+
+	if (a < 0)
+	{
+		a = -a;
+	}
+
+	pixel_set(ras, ox + xi - 1, oy + yi - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - xi    , oy + yi - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox + xi - 1, oy - yi    , 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - xi    , oy - yi    , 0x00, 0x00, 0x00, a);
+}
+
+void ras_ring3(
+	struct ras_buf ras,
+	uint32_t ox,
+	uint32_t oy,
+	uint32_t ro,
+	uint32_t ri)
+{
+	ro += 1;
+	ri += 1;
+
+	int32_t i;
+	int32_t a;
+
+	int32_t x = 1;
+	int32_t y = ro - 1;
+
+	int32_t xi = 1;
+	int32_t yi = ri - 1;
+
+	int32_t ro2 = ro * ro;
+	int32_t ri2 = ri * ri;
+
+	while (x < y)
+	{
+		a = (0xFF * ro) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+		if (a < 0)
+		{
+			a = -a;
+		}
+
+		// set antialiased NNE, NNW, SSE, SSW octants
+		pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
+
+		// set antialiased ENE, ESE, WNW, WSW octants
+		pixel_set(ras, ox + y - 1, oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy + x - 1, 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox + y - 1, oy - x    , 0x00, 0x00, 0x00, a);
+		pixel_set(ras, ox - y    , oy - x    , 0x00, 0x00, 0x00, a);
+
+		if (xi < yi)
+		{
+			// fill the ring
+			for (i = yi; i < y; ++i)
+			{
+				pixel_set(ras, ox + xi - 1, oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - xi    , oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + xi - 1, oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - xi    , oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy + xi - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy - xi    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy - xi    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy + xi - 1, 0x00, 0x00, 0x00, 0xFF);
+			}
+
+			if (((xi + 1) * (xi + 1) + (yi * yi)) > ri2)
+			{
+				--yi;
+				++xi;
+			}
+			else
+			{
+				++xi;
+			}
+		}
+		else
+		{
+			// fill diagonals
+			pixel_set(ras, ox + x - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox + x - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - x    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+			pixel_set(ras, ox - x    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+
+			// fill the rest of the circle
+			for (i = x + 1; i < y; ++i)
+			{
+				pixel_set(ras, ox + x - 1, oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + x - 1, oy - i    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - x    , oy + i - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy - x    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox + i - 1, oy - x    , 0x00, 0x00, 0x00, 0xFF);
+				pixel_set(ras, ox - i    , oy + x - 1, 0x00, 0x00, 0x00, 0xFF);
+			}
+		}
+
+		if (((x + 1) * (x + 1) + (y * y)) > ro2)
+		{
+			--y;
+			++x;
+		}
+		else
+		{
+			++x;
+		}
+	}
+
+	// set antialiased diagonals pixels
+	a = (0xFF * ro) - ((0xFF * isqrt(((y * y) + (x * x)) << 16)) >> 8);
+
+	if (a < 0)
+	{
+		a = -a;
+	}
+
+	pixel_set(ras, ox + x - 1, oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy + y - 1, 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox + x - 1, oy - y    , 0x00, 0x00, 0x00, a);
+	pixel_set(ras, ox - x    , oy - y    , 0x00, 0x00, 0x00, a);
 }

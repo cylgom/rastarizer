@@ -80,7 +80,7 @@ int main(void)
 
 	// test all circles radi up to 10 pixels
 #if 1
-	ras_disk(ras, 80, 80, 40);
+	ras_disk(ras, 80, 50, 40);
 	ras_disk(ras, 10, 20, 10);
 	ras_disk(ras, 10, 40, 9);
 	ras_disk(ras, 10, 60, 8);
@@ -91,14 +91,42 @@ int main(void)
 	ras_disk(ras, 10, 160, 3);
 	ras_disk(ras, 10, 180, 2);
 	ras_disk(ras, 10, 200, 1);
+#endif
+
+#if 1
+	ras_disk2(ras, 320, 50, 40);
+	ras_disk2(ras, 390, 20, 10);
+	ras_disk2(ras, 390, 40, 9);
+	ras_disk2(ras, 390, 60, 8);
+	ras_disk2(ras, 390, 80, 7);
+	ras_disk2(ras, 390, 100, 6);
+	ras_disk2(ras, 390, 120, 5);
+	ras_disk2(ras, 390, 140, 4);
+	ras_disk2(ras, 390, 160, 3);
+	ras_disk2(ras, 390, 180, 2);
+	ras_disk2(ras, 390, 200, 1);
+#endif
+
+#if 0
 	ras_rounded_rectangle(ras, 200, 300, 200, 350, 17);
 #endif
 
-	// test rings
 #if 1
-	ras_ring(ras, 200, 200, 100, 90);
-	ras_ring(ras, 200, 200, 70, 69);
-	ras_ring(ras, 200, 200, 65, 55);
+	ras_ring(ras, 110, 300, 100, 90);
+	ras_ring(ras, 110, 300, 70, 69);
+	ras_ring(ras, 110, 300, 65, 55);
+#endif
+
+#if 1
+	ras_ring2(ras, 290, 300, 100, 90);
+	ras_ring2(ras, 290, 300, 70, 69);
+	ras_ring2(ras, 290, 300, 65, 55);
+#endif
+
+#if 1
+	ras_ring3(ras, 200, 145, 100, 90);
+	ras_ring3(ras, 200, 145, 70, 69);
+	ras_ring3(ras, 200, 145, 65, 55);
 #endif
 	
 	// lines
